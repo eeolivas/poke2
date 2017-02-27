@@ -1,0 +1,39 @@
+<div data-ng-controller="matCtrl as mat">
+	<div class="centered">
+	<button data-ng-click="mat.restart()" type="button" class="btn btn-danger" data-ng-show="mat.beginShow">Restart</button>
+	</div>
+
+  		<div class="container battlebox mainbox-show-hide content-area" ng-show="mat.battlebox">
+
+
+  			<div class="pokename container bbheader mainbox-show-hide content-area" ng-show="mat.bbheader">HERE WE GO
+  			</div> 
+  			 				 				
+    			<div id="poke0" class="container col-xs-12 col-sm-6 col-md-6 col-lg-6" ng-show="mat.poke0Show">		
+    			<div ng-cloak data-ng-show="mat.poke0">
+					<div class=pokename>
+					<h1>{{mat.poke0.name}}</h1>
+					<h3>Level: {{mat.poke0.battleStats.level}}</h3>
+					</div>
+						<img id="poke0Front" class="pokeImage mirrored" alt="No Image" data-ng-src="{{mat.poke0.imageFront}}"/>
+					</div>
+				</div>	
+				<div id="poke1" class="container col-xs-12 col-sm-6 col-md-6 col-lg-6" ng-show="mat.poke1Show">
+					<div ng-cloak data-ng-show="mat.poke1">
+						<div class=pokename>
+							<h1>{{mat.poke1.name}}</h1>
+							<h3>Level: {{mat.poke1.battleStats.level}}</h3>
+						</div>
+							<img id="poke1Front" class="pokeImage" alt="No Image" data-ng-src="{{mat.poke1.imageFront}}"/>
+						</div>				
+    			</div>	
+  			
+  				<div>
+  						<button data-ng-click="mat.enterFighters()" ng-show="mat.beginShow" type="button" class="btn btn-primary">Fight!</button>
+  						
+  				</div>
+		</div>
+	
+</div>
+	
+	

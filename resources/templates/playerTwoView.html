@@ -1,0 +1,61 @@
+<!-- <div data-ng-controller="matCtrl as mat"> -->
+<!-- 	<div class="centered"> -->
+<!-- 	<button data-ng-click="mat.restart()" type="button" class="btn btn-danger">Restart</button> -->
+<!-- 	</div> -->
+<!-- </div> -->
+
+
+<div data-ng-controller="PlayerTwo as p2">
+	<button data-ng-click="p2.restart()" type="button" class="centered btn btn-danger">Restart</button>
+	<h3 class="centered pokename">{{p2.poke1.name}}'s Turn</h3>
+	
+<!-- 	debugging button -->
+<!-- <button data-ng-click="p2.switchView()" type="button" class="btn btn-danger">View Change</button> -->
+
+<!-- 	topBox -->
+	<div class="container col-xs-12">
+		<div class="col-xs-6 frontImage">
+			<img id="poke1Front" class="mirrored pokeImage" alt="No Image" data-ng-src="{{p2.poke0.imageFront}}"/>
+		</div>
+		<div class="col-xs-6 hpBar">
+			<div class="pokename">
+				{{p2.poke0.name}}
+				<uib-progressbar  class="mirrored progress-striped active" type="{{p2.poke0.battleStats.hpBarType}}" value="p2.poke0.battleStats.hpCurr" max="p2.poke0.battleStats.hpMax"></uib-progressbar>
+				<div class="moveInfo">
+					{{p2.check.display}}
+					{{p2.check.dmg}}
+				</div>
+			</div>
+		</div>
+	</div>
+	
+<!-- 	bottomBox -->
+
+	<div class="container col-xs-12">
+		<div class="col-xs-6 hpBar"> 
+			<div class="pokename"> 
+				{{p2.poke1.name}}
+				<uib-progressbar  class="progress-striped active" type="{{p2.poke1.battleStats.hpBarType}}" value="p2.poke1.battleStats.hpCurr" max="p2.poke1.battleStats.hpMax"></uib-progressbar>
+				<div data-ng-hide="p2.hideMoves">
+				
+<!-- 				debugging buttons -->
+<!-- 					<button data-ng-click="p2.myself()" type="button" class="btn btn-success">myselfk</button> -->
+<!-- 					<button data-ng-click="p2.opponent()" type="button" class="btn btn-danger">opponent</button> -->
+					
+<!-- 					to be replaced by 4+ real moves/buttons -->
+					<button data-ng-click="p2.spAtk()" type="button" class="btn btn-info">Special Attack</button>
+					<button data-ng-click="p2.phAtk()" type="button" class="btn btn-warning">Physical Attack!</button>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6 backImage"> 
+			<img id="poke0Back" class="mirrored pokeImage" alt="No Image" data-ng-src="{{p2.poke1.imageBack}}"/>
+		</div>
+		
+	</div>
+
+
+	
+	
+	
+</div>

@@ -1,0 +1,32 @@
+	<div data-ng-controller="GenCtrl as generate">
+	
+		<div class="pokename" data-ng-show="generate.fatal">
+			<h1>Gross, Charizard is DOA</h1>
+			<h2>Too bad, really. That was going to be a good battle.</h2>
+			<h2>Please refresh and try again</h2>
+		</div>
+		
+		<div id="generateButton" class="container centered" ng-hide="generate.btnHider">
+			<button data-ng-click="generate.randomPokemon()" type="button" class="btn btn-warning">RANDOMIZE POKEMON</button>
+		</div>
+		<div id="Notes" class="container centered pokename" ng-hide="generate.btnHider">
+			<h3>Notes:</h3>
+			<h4>1. Random Battle between two pokemon within 10 levels of each other</h4>
+			<h4>2. "Real" leveled stats and damage calculations</h4>
+			<h4>3. Faster Pokemon have a better chance of landing critical hits for 2X damage</h4>
+		</div>
+		
+		
+		
+		<div  class="centered container" ng-show="generate.loadingImage">
+			<img id="loadingImage" src="resources/sprites/loadingGif.gif"/>
+		</div>
+		<div class="pokename" data-ng-show="generate.prob1">
+			<h2>Pokemon Server is taking it's sweet time</h2>
+		</div>
+		<div class="pokename" data-ng-show="generate.prob2">
+			<h2>Ah geez really? ..still waiting? What's going on here?</h2>
+		</div>
+	</div>
+	
+	

@@ -1,0 +1,11 @@
+@CHARSET "ISO-8859-1";
+
+/* test.html animations */
+	.mainbox-show-hide {
+  	transition: all linear 2.5s;
+	}
+	.mainbox-show-hide.ng-hide {
+  	opacity: 0;
+	}
+	
+/* end test.html animations */

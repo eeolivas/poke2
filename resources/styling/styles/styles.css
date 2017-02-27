@@ -1,0 +1,48 @@
+@CHARSET "ISO-8859-1";
+
+/* index page */
+body{
+	background-color: #181818;
+}
+#myHeader{
+	text-align: center;
+	color: #FFFFFF;
+}
+/* end index page */
+
+#generateButton{
+	padding-top: 0.5in;
+}
+
+#loadingImage{
+	width:50%;
+}
+.centered{
+	text-align: center;
+}
+
+.pokeImage{
+	width:60%
+}
+
+.pokename{
+	color: white; 
+	text-transform: uppercase;
+	font-size: 20px;
+}
+.mirrored{
+    -moz-transform: scaleX(-1);
+    -o-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+    filter: FlipH;
+    -ms-filter: "FlipH";
+    
+}
+
+.battlebox {
+	text-align: center;
+	background: #181818;
+}
+
+
