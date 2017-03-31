@@ -7,7 +7,7 @@
 
 <div data-ng-controller="PlayerOne as p1">
 <button data-ng-click="p1.restart()" type="button" class="centered btn btn-danger">Restart</button>
-<h3 class="centered pokename">{{p1.poke0.name}}'s Turn</h3>
+<h3 class="centered pokename">PLAYER ONE: {{p1.poke0.name}}'s Turn</h3>
 
 <!-- debugging button -->
 <!-- <button data-ng-click="p1.switchView()" type="button" class="btn btn-danger">View Change</button> -->
@@ -47,6 +47,7 @@
 <!-- 					to be replaced by at least 4 real moves/buttons -->
 					<button data-ng-click="p1.spAtk()" type="button" class="btn btn-info">Special Attack!</button>
 					<button data-ng-click="p1.phAtk()" type="button" class="btn btn-warning">Physical Attack!</button>
+					<button data-ng-click="p1.switchPokemon()" type="button" class="btn btn-primary">Change Pokemon!</button>
 				</div>
 			</div>
 		</div>

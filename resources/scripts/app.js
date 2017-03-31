@@ -13,7 +13,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
 			name: 'genMatchup',
 			url:'/generate',
 			templateUrl:'resources/templates/generate.html',
-			controller: 'GenCtrl'
+//			controller: 'GenCtrl'
 	}
 	
 	var testState={
@@ -23,27 +23,41 @@ app.config(function($stateProvider, $urlRouterProvider) {
 //			controller: 'testCtrl'
 	}
 	
-	// this state is no longer needed
-	var matchupState={
-			name: 'matchup',
-			url:'/matchup',
-			templateUrl:'resources/templates/mathcup.html',
-			controller: 'MatchCtrl'
-	}
+//	// this state is no longer needed
+//	var matchupState={
+//			name: 'matchup',
+//			url:'/matchup',
+//			templateUrl:'resources/templates/mathcup.html',
+//			controller: 'MatchCtrl'
+//	}
 	
 	var pOneState = {
 		name: 'playerOneView',
 		url: '/playerOne',
 		templateUrl: 'resources/templates/playerOneView.html',
-		controller: 'PlayerOne'
+//		controller: 'PlayerOne'
 	};
 	
 	var pTwoState = {
 		name: 'playerTwoView',
 		url: '/playerTwo',
 		templateUrl: 'resources/templates/playerTwoView.html',
-		controller: 'PlayerTwo'
+//		controller: 'PlayerTwo'
 	};
+	
+	var switch1State = {
+			name: 'switch1State',
+			url: '/player1switch',
+			templateUrl: 'resources/templates/playerOneSwitch.html',
+//			controller: 'PlayerTwo'
+		};
+	var switch2State = {
+			name: 'switch2State',
+			url: '/player2switch',
+			templateUrl: 'resources/templates/playerTwoSwitch.html',
+//			controller: 'PlayerTwo'
+	};
+	
 	var pTwoWin = {
 			name: 'playerTwoWin',
 			url: '/playerTwoWin',
@@ -60,9 +74,11 @@ app.config(function($stateProvider, $urlRouterProvider) {
 	
 	$stateProvider.state(genMatchupState);
 	$stateProvider.state(testState);
-	$stateProvider.state(matchupState);
+//	$stateProvider.state(matchupState);
 	$stateProvider.state(pOneState);
 	$stateProvider.state(pTwoState);
+	$stateProvider.state(switch1State);
+	$stateProvider.state(switch2State);
 	$stateProvider.state(pOneWin);
 	$stateProvider.state(pTwoWin);
 	

@@ -1,0 +1,28 @@
+<div data-ng-controller="P2Switch as pS2">
+	<div class="col-xs-3"></div>
+	<div class="col-xs-6 centered">
+		<div class="pokename">Available</div>
+		<button data-ng-click="pS2.cancelChange()" type="button" class="btn btn-danger">Cancel Switch</button>			
+		<div ng-cloak data-ng-show="pS2.pokeTeam[0].battleStats.isAlive">
+			<div class="pokename"><h1>{{pS2.pokeTeam[0].name}}</h1><h2>LVL:{{pS2.pokeTeam[0].battleStats.level}}</h2></div>
+			<img alt="No Image" data-ng-src="{{pS2.pokeTeam[0].imageFront}}"/>
+			<div class="centered"><uib-progressbar  class="progress-striped active" type="{{pS2.pokeTeam[0].battleStats.hpBarType}}" value="pS2.pokeTeam[0].battleStats.hpCurr" max="pS2.pokeTeam[0].battleStats.hpMax"></uib-progressbar></div>
+			<div data-ng-hide="pS2.pokeTeam[0].battleStats.isActive"><button data-ng-click="pS2.changeFighter(1,0)" type="button" class="btn btn-warning">Choose</button></div>
+		</div>
+		<div ng-cloak data-ng-show="pS2.pokeTeam[1].battleStats.isAlive">
+			<div class="pokename"><h1>{{pS2.pokeTeam[1].name}}</h1><h2>LVL:{{pS2.pokeTeam[1].battleStats.level}}</h2></div>
+			<img alt="No Image" data-ng-src="{{pS2.pokeTeam[1].imageFront}}"/>
+			<div class="centered"><uib-progressbar  class="progress-striped active" type="{{pS2.pokeTeam[1].battleStats.hpBarType}}" value="pS2.pokeTeam[1].battleStats.hpCurr" max="pS2.pokeTeam[1].battleStats.hpMax"></uib-progressbar></div>
+			<div data-ng-hide="pS2.pokeTeam[1].battleStats.isActive"><button data-ng-click="pS2.changeFighter(1,1)" type="button" class="btn btn-warning">Choose</button></div>
+		</div>
+		<div ng-cloak data-ng-show="pS2.pokeTeam[2].battleStats.isAlive">
+			<div class="pokename"><h1>{{pS2.pokeTeam[2].name}}</h1><h2>LVL:{{pS2.pokeTeam[2].battleStats.level}}</h2></div>
+			<img alt="No Image" data-ng-src="{{pS2.pokeTeam[2].imageFront}}"/>
+			<div class="centered"><uib-progressbar  class="progress-striped active" type="{{pS2.pokeTeam[2].battleStats.hpBarType}}" value="pS2.pokeTeam[2].battleStats.hpCurr" max="pS2.pokeTeam[2].battleStats.hpMax"></uib-progressbar></div>
+			<div data-ng-hide="pS2.pokeTeam[2].battleStats.isActive"><button data-ng-click="pS2.changeFighter(1,2)" type="button" class="btn btn-warning">Choose</button></div>
+		</div>
+	</div>
+	<div class="col-xs-3"></div>
+</div>
+
+	

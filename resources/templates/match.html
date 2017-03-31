@@ -1,7 +1,12 @@
 <div data-ng-controller="matCtrl as mat">
 	<div class="centered">
-	<button data-ng-click="mat.restart()" type="button" class="btn btn-danger" data-ng-show="mat.beginShow">Restart</button>
-	</div>
+		<div>
+			<button data-ng-click="mat.restart()" type="button" class="btn btn-sm btn-danger" data-ng-show="mat.beginShow">Restart</button>
+		</div>
+		<div>
+  			<button data-ng-click="mat.enterFighters()" ng-show="mat.beginShow" type="button" class="btn btn-lg btn-primary">Fight!</button>
+  		</div>
+  	</div>
 
   		<div class="container battlebox mainbox-show-hide content-area" ng-show="mat.battlebox">
 
@@ -10,28 +15,54 @@
   			</div> 
   			 				 				
     			<div id="poke0" class="container col-xs-12 col-sm-6 col-md-6 col-lg-6" ng-show="mat.poke0Show">		
-    			<div ng-cloak data-ng-show="mat.poke0">
-					<div class=pokename>
-					<h1>{{mat.poke0.name}}</h1>
-					<h3>Level: {{mat.poke0.battleStats.level}}</h3>
-					</div>
-						<img id="poke0Front" class="pokeImage mirrored" alt="No Image" data-ng-src="{{mat.poke0.imageFront}}"/>
+    				<div ng-cloak data-ng-show="mat.player0Poke[0]">
+    					<div class="pokename">
+							<h2>PLAYER ONE'S TEAM</h2>
+						</div>
+						<img id="poke0Front" class="pokeImage mirrored" alt="No Image" data-ng-src="{{mat.player0Poke[0].imageFront}}"/>
+						<div class="pokename">
+							<h3>{{mat.player0Poke[0].name}}</h3>
+							<h4>Level: {{mat.player0Poke[0].battleStats.level}}</h4></br>
+						</div>
+						<img id="poke0Front" class="pokeImage mirrored" alt="No Image" data-ng-src="{{mat.player0Poke[1].imageFront}}"/>
+						<div class="pokename">
+							<h3>{{mat.player0Poke[1].name}}</h3>
+							<h4>Level: {{mat.player0Poke[1].battleStats.level}}</h4></br>
+						</div>
+						<img id="poke0Front" class="pokeImage mirrored" alt="No Image" data-ng-src="{{mat.player0Poke[2].imageFront}}"/>
+						<div class="pokename">
+							<h3>{{mat.player0Poke[2].name}}</h3>
+							<h4>Level: {{mat.player0Poke[2].battleStats.level}}</h4></br>
+						</div>
+							
 					</div>
 				</div>	
 				<div id="poke1" class="container col-xs-12 col-sm-6 col-md-6 col-lg-6" ng-show="mat.poke1Show">
-					<div ng-cloak data-ng-show="mat.poke1">
-						<div class=pokename>
-							<h1>{{mat.poke1.name}}</h1>
-							<h3>Level: {{mat.poke1.battleStats.level}}</h3>
+					<div ng-cloak data-ng-show="mat.player0Poke[1]">
+						<div class="pokename">
+							<h2>PLAYER TWO'S TEAM</h2>
 						</div>
-							<img id="poke1Front" class="pokeImage" alt="No Image" data-ng-src="{{mat.poke1.imageFront}}"/>
-						</div>				
+						<img id="poke1Front" class="pokeImage" alt="No Image" data-ng-src="{{mat.player1Poke[0].imageFront}}"/>
+						<div class="pokename">
+							
+							<h3>{{mat.player1Poke[0].name}}</h3>
+							<h4>Level: {{mat.player1Poke[0].battleStats.level}}</h4></br>
+						</div>
+						<img id="poke1Front" class="pokeImage" alt="No Image" data-ng-src="{{mat.player1Poke[1].imageFront}}"/>
+						<div class="pokename">
+							<h3>{{mat.player1Poke[1].name}}</h3>
+							<h4>Level: {{mat.player1Poke[1].battleStats.level}}</h4></br>
+						</div>
+							<img id="poke1Front" class="pokeImage" alt="No Image" data-ng-src="{{mat.player1Poke[2].imageFront}}"/>
+						<div class="pokename">
+							<h3>{{mat.player1Poke[2].name}}</h3>
+							<h4>Level: {{mat.player1Poke[2].battleStats.level}}</h4></br>
+						</div>
+						>
+					</div>				
     			</div>	
   			
-  				<div>
-  						<button data-ng-click="mat.enterFighters()" ng-show="mat.beginShow" type="button" class="btn btn-primary">Fight!</button>
-  						
-  				</div>
+  				
 		</div>
 	
 </div>

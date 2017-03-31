@@ -2,12 +2,21 @@
 	
 	
 		<div class="container centered pokename">
-			<h1>{{win2.winner.name}} WINS!</h1>
+		<div><h1>PLAYER TWO WINS!</h1></div>
+			<h2>{{win2.winner[0].name}}</h2>
 			<div class="col-xs-12">
-				<img id="pokeWinner" class="pokeImage" alt="No Image" data-ng-src="{{win2.winner.imageFront}}"/>
+				<img id="pokeWinner" class="pokeImage" alt="No Image" data-ng-src="{{win2.winner[0].imageFront}}"/>
 			</div>
+			<h2>{{win2.winner[1].name}}</h2>
+			<div class="col-xs-12">
+				<img id="pokeWinner" class="pokeImage" alt="No Image" data-ng-src="{{win2.winner[1].imageFront}}"/>
+			</div>
+			<h2>{{win2.winner[2].name}}</h2>
+			<div class="col-xs-12">
+				<img id="pokeWinner" class="pokeImage" alt="No Image" data-ng-src="{{win2.winner[2].imageFront}}"/>
+			</div>
+		</div>
+		<div class="centered">
 			<button data-ng-click="win2.restart()" type="button" class="btn btn-danger">RESTART</button>
 		</div>
 	</div>
-	
-	

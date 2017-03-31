@@ -5,30 +5,94 @@
 //var PokeStore.poSto={};
 //PokeStore.poSto.pokeArray=[]; 
 
+//'$state', function($state),
+// form http with service example
+angular.module("PokemonModule").controller("GenCtrl",  function($state, $timeout, PokeStore, $q){
+	var gen = this;
 
+	PokeStore.clearPokeArray();
+	gen.btnHider=false;
+	gen.loadingImage=false;
+	gen.p0=false;
+	gen.p1=false;
+	gen.prob1=false;
+	gen.prob2=false
+	gen.fatalError=false;
+	gen.promise=[]
+	
+	//the setProb functions are for dusplaying to user 
+	//any problems with retrieving pokemon
+	// called by set timeout functions
+	gen.setProb1=function(){gen.prob1=true;}
+	gen.setProb2=function(){gen.prob2=true;}
+	gen.setFatal=function(){gen.fatalError=true;}
+
+	
+	gen.randomPokemon = function() {
+		gen.btnHider=true
+		gen.loadingImage=true;
+		gen.promise.splice(0);
+		
+		// set the limit for ii to be the number of pokemon wanted
+		for(ii=0; ii<6; ii++){
+			gen.rand = (Math.floor(Math.random() * 384))+1;
+								// change this num ^ to determine range of selectd pokemon
+			gen.promise.push(PokeStore.requestPokemon(gen.rand));		
+		}
+		
+		// q.all with an array of promises that will do the ".then function" when all promises are fulfilled
+		$q.all([gen.promise[0],gen.promise[1],gen.promise[2],gen.promise[3],gen.promise[4],gen.promise[5]]).then(function(values){
+			PokeStore.pokeArray=values;
+			console.log('fulfilled');
+			PokeStore.refresh = false;
+			$state.go('match');
+		}, function(reason){
+			gen.setFatal();
+		});
+
+	
+		// time before displaying possible error messages
+		$timeout(gen.setProb1, 6000);
+		$timeout(gen.setProb2, 11000);
+		
+		
+	}		
+});
 
 angular.module("PokemonModule").controller("matCtrl", function($state, $timeout, PokeStore) {
 	var mat=this;
-	// guard against refreshing issue
+	
+	if(PokeStore.refresh===true){
+		$state.go('genMatchup');
+	}
+	
+	console.log('passed the check');
+	PokeStore.unboxPokemon();
+	PokeStore.setStats(0);
+	PokeStore.setStats(1);
+	mat.player0Poke = PokeStore.playerPokemonArray[0];
+	mat.player1Poke = PokeStore.playerPokemonArray[1];
 
-	// turn these all false for realzies  -true is just for testing
-	// also uncomment out code below -set timeouts
+	
+	console.log("Player 0 pokes");
+	for(ii=0; ii<mat.player0Poke.length;ii++){
+		console.log(mat.player0Poke[ii]);
+	}
+	
+	console.log("Player 1 pokes");
+	for(ii=0; ii<mat.player1Poke.length;ii++){
+		console.log(mat.player1Poke[ii]);
+	}
+
+//	// turn these all false for realzies  -true is just for testing
+//	// also uncomment out code below -set timeouts
 	mat.poke0Show=false;
 	mat.poke1Show=false;
 	mat.battlebox = false;
-//	mat.bbheader = false; // maybe take this out
+
 	mat.beginShow= false;
-	PokeStore.setBattleStats();
-	mat.poke0 =PokeStore.pokeArray[0];
-	mat.poke1 =PokeStore.pokeArray[1];
-	if((!mat.poke0)||(!mat.poke1)){
-	$state.go('genMatchup');
-	}
-	console.log("poke0"); 
-	console.log(mat.poke0); 
-	console.log("poke1"); 
-	console.log(mat.poke1); 
-	
+//	PokeStore.setBattleStats();
+
 	mat.setTruBattleBox = function(){
 		mat.battlebox=true;
 	};	
@@ -38,21 +102,22 @@ angular.module("PokemonModule").controller("matCtrl", function($state, $timeout,
 	mat.setTruPoke1Show = function(){
 		mat.poke1Show=true;
 	};		
-	mat.setTrubBHeader = function(){
-		mat.bbheader=true;
-	};	
+
 	mat.setTrubeginShow=function(){
 		mat.beginShow=true;
 	}
 	$timeout(mat.setTruBattleBox, 1000);
-//	$timeout(mat.setTrubBHeader, 1500);
 	$timeout(mat.setTruPoke0Show, 2500);
 	$timeout(mat.setTruPoke1Show, 3500);
 	$timeout(mat.setTrubeginShow, 4500);
 
 	
 	mat.enterFighters=function(){
-		if((mat.poke0.stats[0].base_stat)>(mat.poke1.stats[0].base_stat)){
+		PokeStore.playerPokemonArray[0][0].battleStats.isActive=true;
+		PokeStore.playerPokemonArray[1][0].battleStats.isActive=true;
+		PokeStore.activeBattlers[0]=PokeStore.playerPokemonArray[0][0];
+		PokeStore.activeBattlers[1]=PokeStore.playerPokemonArray[1][0];
+		if((mat.player0Poke[0].stats[0].base_stat)>(mat.player1Poke[0].stats[0].base_stat)){
 			$state.go('playerOneView');
 		} else{
 			$state.go('playerTwoView');
@@ -67,27 +132,35 @@ angular.module("PokemonModule").controller("matCtrl", function($state, $timeout,
 
 angular.module("PokemonModule").controller("PlayerOne", function($state, $timeout, PokeStore, BattleLogic) {
 	var pOne=this;
-	pOne.hideMoves=false;
-	pOne.poke0= PokeStore.pokeArray[0];
-	pOne.poke1=PokeStore.pokeArray[1];
 	
-//	pOne.poke0.hpBarType="null";
-//	pOne.poke1.hpBarType="null";
-	
-	// guard against refreshing issue
-	if((!pOne.poke0)||(!pOne.poke1)){
+	if(PokeStore.refresh===true){
 		$state.go('genMatchup');
 	}
+	
+	pOne.hideMoves=false;
+	pOne.poke0= PokeStore.activeBattlers[0];
+	pOne.poke1=PokeStore.activeBattlers[1];
+	console.log("currently fighting");
+	console.log(pOne.poke0);
+	console.log(pOne.poke1);
+	
 	pOne.changeState = function(faint){
-		if(faint===-1){
+		if(faint===99){
 			$state.go('playerTwoView');
 		}
 		if (faint===0){
-			$state.go('playerTwoWin')
+			$state.go('switch1State')
 		}
 		if(faint===1){
+			$state.go('switch2State');
+		}
+		if(faint===-1){
+			$state.go('playerTwoWin');
+		}
+		if(faint===-2){
 			$state.go('playerOneWin');
 		}
+		
 	}
 	
 	pOne.myself = function(){
@@ -119,6 +192,9 @@ angular.module("PokemonModule").controller("PlayerOne", function($state, $timeou
 		$timeout(pOne.changeState, 2500,true, pOne.check.faint);
 	}
 	
+	pOne.switchPokemon=function(){
+		$state.go('switch1State');
+	}
 	
 	pOne.restart=function(){
 		$state.go('genMatchup');
@@ -133,27 +209,38 @@ angular.module("PokemonModule").controller("PlayerOne", function($state, $timeou
 });
 
 angular.module("PokemonModule").controller("PlayerTwo", function($state, $timeout, PokeStore, BattleLogic) {
-
 	var pTwo=this;
-	pTwo.hideMoves=false;
-	pTwo.poke0= PokeStore.pokeArray[0];
-	pTwo.poke1=PokeStore.pokeArray[1];
-	// guard against refreshing issue
-	if((!pTwo.poke0)||(!pTwo.poke1)){
+	
+	if(PokeStore.refresh===true){
 		$state.go('genMatchup');
 	}
 	
+	pTwo.hideMoves=false;
+	pTwo.poke0= poke0= PokeStore.activeBattlers[0];
+	pTwo.poke1=poke0= PokeStore.activeBattlers[1];
+	console.log("currently fighting");
+	console.log(pTwo.poke0);
+	console.log(pTwo.poke1);
+
+	
 	pTwo.changeState = function(faint){
-		if(faint===-1){
+		if(faint===99){
 			$state.go('playerOneView');
 		}
 		if (faint===0){
-			$state.go('playerTwoWin')
+			$state.go('switch1State')
 		}
 		if(faint===1){
+			$state.go('switch2State');
+		}
+		if(faint===-1){
+			$state.go('playerTwoWin');
+		}
+		if(faint===-2){
 			$state.go('playerOneWin');
 		}
-	};
+		
+	}
 	
 	pTwo.myself = function(){
 		pTwo.poke1.battleStats.hpCurr = pTwo.poke1.battleStats.hpCurr-10; 
@@ -185,6 +272,9 @@ angular.module("PokemonModule").controller("PlayerTwo", function($state, $timeou
 		$timeout(pTwo.changeState, 2500,true, pTwo.check.faint);
 	}
 	
+	pTwo.switchPokemon=function(){
+		$state.go('switch2State');
+	}
 	
 	
 	pTwo.restart=function(){
@@ -199,95 +289,70 @@ angular.module("PokemonModule").controller("PlayerTwo", function($state, $timeou
 });
 
 
-
-//'$state', function($state),
-// form http with service example
-angular.module("PokemonModule").controller("GenCtrl",  function($state, $timeout, PokeStore){
-	var gen = this;
-
-	PokeStore.clearPokeArray();
-	gen.btnHider=false;
-	gen.loadingImage=false;
-	gen.p0=false;
-	gen.p1=false;
-	gen.prob1=false;
-	gen.prob2=false
-	gen.fatalError=false;
-	gen.promise=[]
+angular.module("PokemonModule").controller("P1Switch",  function($state, $timeout, PokeStore, $q){
+	var p1Switch = this;
 	
-	gen.setProb1=function(){
-		gen.prob1=true;
+	if(PokeStore.refresh===true){
+		$state.go('genMatchup');
+	}
+	p1Switch.pokeTeam = PokeStore.playerPokemonArray[0];
+	console.log('Team:');
+	console.log(p1Switch.pokeTeam);
+	p1Switch.cancelChange=function(){
+		$state.go('playerOneView');
 	}
 	
-	gen.setProb2=function(){
-		gen.prob2=true;
+	p1Switch.changeFighter=function(team,poke){
+		PokeStore.switchBattler(team,poke);
+		$state.go('playerTwoView');
 	}
-	
-	gen.setFatal=function(){
-		gen.fatalError=true;
-	}
-	
-	gen.randomPokemon = function(input) {
-		gen.btnHider=true
-		gen.loadingImage=true;
-		gen.promise.splice(0);
-		for(ii=0; ii<2; ii++){
-			gen.rand = (Math.floor(Math.random() * 150))+1;
-			gen.promise.push(PokeStore.requestPokemon(gen.rand));		
-		}
-		// grabs and store the first pokemon
-		gen.promise[0].then(function(response){
-			PokeStore.pokeArray.unshift(response.data);
-			console.log("first poke stored");
-			gen.p0=true
-			if((gen.p0)&&(gen.p1)){
-				console.log("going to next state");
-				$state.go('match');
-			}
-		}, function(response){
-			console.log("failure to grab");
-			gen.setFatal();
-			gen.prob1=false;
-			gen.prob2=false;
-		});
-		// grabs and stores the second pokemon and moves to next state
-		gen.promise[1].then(function(response){
-			PokeStore.pokeArray.unshift(response.data);
-			console.log("second poke stored");
-			gen.p1=true
-			if((gen.p0)&&(gen.p1)){
-				console.log("going to next state");
-				$state.go('match');
-			}
-		}, function(response){
-			console.log("failure to grab");
-			gen.setFatal();
-			gen.prob1=false;
-			gen.prob2=false;
-		});
-	
-		$timeout(gen.setProb1, 5000);
-		$timeout(gen.setProb2, 10000);
-		
-		
-	}		
 });
 
+angular.module("PokemonModule").controller("P2Switch",  function($state, $timeout, PokeStore, $q){
+	var p2Switch = this;
+	
+	if(PokeStore.refresh===true){
+		$state.go('genMatchup');
+	}
+	
+	p2Switch.pokeTeam = PokeStore.playerPokemonArray[1];
+	console.log('Team:');
+	console.log(p2Switch.pokeTeam);
+	p2Switch.cancelChange=function(){
+		$state.go('playerTwoView');
+	}
+	
+	p2Switch.changeFighter=function(team,poke){
+		PokeStore.switchBattler(team,poke);
+		$state.go('playerOneView');
+	}
+});
+
+
 angular.module("PokemonModule").controller("PlayerOneWin",  function($state, PokeStore){
-	p1w=this;
-	p1w.winner = PokeStore.pokeArray[0];
-	p1w.loser = PokeStore.pokeArray[1];
+	var p1w=this;
+	
+	if(PokeStore.refresh===true){
+		$state.go('genMatchup');
+	}
+	
+	p1w.winner = PokeStore.playerPokemonArray[0];
+	p1w.loser = PokeStore.playerPokemonArray[1];
 	
 	p1w.restart=function(){
 		$state.go('genMatchup');
-		
 	}
 });
 
 angular.module("PokemonModule").controller("PlayerTwoWin",  function($state, PokeStore){
-	p2w=this;
-	p2w.winner = PokeStore.pokeArray[1];
-	p2w.loser = PokeStore.pokeArray[0];
+	var p2w=this;
+	
+	if(PokeStore.refresh===true){
+		$state.go('genMatchup');
+	}
+	
+	p2w.winner = PokeStore.playerPokemonArray[1];
+	p2w.loser = PokeStore.playerPokemonArray[0];
 	p2w.restart=function(){
 		$state.go('genMatchup');
 	}
