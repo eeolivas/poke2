@@ -19,7 +19,7 @@
 		</div>
 		<div class="col-xs-6 hpBar">
 			<div class="pokename">
-				{{p2.poke0.name}}
+				{{p2.poke0.name}}--LVL:{{p2.poke0.battleStats.level}}
 				<uib-progressbar  class="mirrored progress-striped active" type="{{p2.poke0.battleStats.hpBarType}}" value="p2.poke0.battleStats.hpCurr" max="p2.poke0.battleStats.hpMax"></uib-progressbar>
 				<div class="moveInfo">
 					{{p2.check.display}}
@@ -34,7 +34,7 @@
 	<div class="container col-xs-12">
 		<div class="col-xs-6 hpBar"> 
 			<div class="pokename"> 
-				{{p2.poke1.name}}
+				{{p2.poke1.name}}--LVL:{{p2.poke1.battleStats.level}}
 				<uib-progressbar  class="progress-striped active" type="{{p2.poke1.battleStats.hpBarType}}" value="p2.poke1.battleStats.hpCurr" max="p2.poke1.battleStats.hpMax"></uib-progressbar>
 				<div data-ng-hide="p2.hideMoves">
 				
