@@ -61,7 +61,7 @@ angular.module("PokemonModule").service("PokeStore", function($http, $state) {
     		pokemon.battleStats.phDefense = (pokemon.stats[3].base_stat)+(4*pokemon.battleStats.level);
     		pokemon.battleStats.phAttack = (pokemon.stats[4].base_stat)+(4*pokemon.battleStats.level);
     		pokemon.battleStats.hpMax = (pokemon.stats[5].base_stat)+(4*pokemon.battleStats.level);
-    		pokemon.battleStats.hpCurr = pokemon.battleStats.hpMax;    		
+    		pokemon.battleStats.hpCurr = (pokemon.stats[5].base_stat)+(4*pokemon.battleStats.level);  		
     	}
     	
     	

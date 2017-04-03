@@ -49,14 +49,40 @@ angular.module("PokemonModule").controller("GenCtrl",  function($state, $timeout
 		}, function(reason){
 			gen.setFatal();
 		});
-
 	
 		// time before displaying possible error messages
 		$timeout(gen.setProb1, 6000);
 		$timeout(gen.setProb2, 11000);
 		
 		
-	}		
+	}
+	
+	gen.efrenSpecial = function(){
+		gen.btnHider=true
+		gen.loadingImage=true;
+		gen.promise.splice(0);
+		
+		// set the limit for ii to be the number of pokemon wanted
+		for(ii=0; ii<6; ii++){
+			gen.rand = 108; // generate 6 lickitungs - need to be separate calls or attacks will affect ALL lickitungs
+			gen.promise.push(PokeStore.requestPokemon(gen.rand));		
+		}
+		
+		// q.all with an array of promises that will do the ".then function" when all promises are fulfilled
+		$q.all([gen.promise[0],gen.promise[1],gen.promise[2],gen.promise[3],gen.promise[4],gen.promise[5]]).then(function(values){
+			PokeStore.pokeArray=values;
+			console.log('fulfilled');
+			PokeStore.refresh = false;
+			$state.go('match');
+		}, function(reason){
+			gen.setFatal();
+		});
+	
+		// time before displaying possible error messages
+		$timeout(gen.setProb1, 6000);
+		$timeout(gen.setProb2, 11000);
+		
+	}
 });
 
 angular.module("PokemonModule").controller("matCtrl", function($state, $timeout, PokeStore) {

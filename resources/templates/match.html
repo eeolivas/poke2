@@ -1,3 +1,6 @@
+	<div id="myHeader">
+		<h3>By: Efren Olivas</h3>	
+	</div>
 <div data-ng-controller="matCtrl as mat">
 	<div class="centered">
 		<div>
@@ -24,17 +27,19 @@
 							<h3>{{mat.player0Poke[0].name}}</h3>
 							<h4>Level: {{mat.player0Poke[0].battleStats.level}}</h4></br>
 						</div>
-						<img id="poke0Front" class="pokeImage mirrored" alt="No Image" data-ng-src="{{mat.player0Poke[1].imageFront}}"/>
-						<div class="pokename">
-							<h3>{{mat.player0Poke[1].name}}</h3>
-							<h4>Level: {{mat.player0Poke[1].battleStats.level}}</h4></br>
-						</div>
-						<img id="poke0Front" class="pokeImage mirrored" alt="No Image" data-ng-src="{{mat.player0Poke[2].imageFront}}"/>
-						<div class="pokename">
-							<h3>{{mat.player0Poke[2].name}}</h3>
-							<h4>Level: {{mat.player0Poke[2].battleStats.level}}</h4></br>
-						</div>
-							
+<!-- 		try to create a tree view - with first pokemon on top and next two next to eachother on second row -->
+						<div>
+							<img id="poke0Front" class="pokeImage mirrored" alt="No Image" data-ng-src="{{mat.player0Poke[1].imageFront}}"/>
+							<div class="pokename">
+								<h3>{{mat.player0Poke[1].name}}</h3>
+								<h4>Level: {{mat.player0Poke[1].battleStats.level}}</h4></br>
+							</div>
+							<img id="poke0Front" class="pokeImage mirrored" alt="No Image" data-ng-src="{{mat.player0Poke[2].imageFront}}"/>
+							<div class="pokename">
+								<h3>{{mat.player0Poke[2].name}}</h3>
+								<h4>Level: {{mat.player0Poke[2].battleStats.level}}</h4></br>
+							</div>
+						</div>	
 					</div>
 				</div>	
 				<div id="poke1" class="container col-xs-12 col-sm-6 col-md-6 col-lg-6" ng-show="mat.poke1Show">
