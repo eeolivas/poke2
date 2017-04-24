@@ -7,8 +7,10 @@ angular.module("PokemonModule").service("PokeStore", function($http, $state) {
        	var poSto = this;
        	poSto.refresh = true;
        	poSto.baseLevel = 60;
+       	poSto.fullMoves = null;
        	poSto.pokeArray=[]; // where the base pokemon RESPONSES are stored
        	poSto.playerPokemonArray = [[],[]]; // players' pokemon team
+       	poSto.movePromiesUrls = [];
        	poSto.activeBattlers = [0,0];
 
        	
@@ -40,7 +42,9 @@ angular.module("PokemonModule").service("PokeStore", function($http, $state) {
     		for(ii=0;ii<3;ii++){
     			poSto.setSprites(poSto.playerPokemonArray[teamIndex][ii]);
     			poSto.setBattleStats(poSto.playerPokemonArray[teamIndex][ii],ii);
+    			poSto.getMovesUrls(poSto.playerPokemonArray[teamIndex][ii]);
     		}
+//    		poSto.getMoves(teamIndex);
     	}
     	
     	poSto.setSprites=function(pokemon){
@@ -54,7 +58,8 @@ angular.module("PokemonModule").service("PokeStore", function($http, $state) {
     		pokemon.battleStats.isActive = false;
     		pokemon.battleStats.index = num;
     		pokemon.battleStats.level = poSto.baseLevel + poSto.levelMod();
-    		pokemon.battleStats.hpBarType="success"
+    		pokemon.battleStats.hpBarType="success";
+    		pokemon.battleStats.moves=[];
        		pokemon.battleStats.speed = (pokemon.stats[0].base_stat)+(4*pokemon.battleStats.level);
     		pokemon.battleStats.spDefense = (pokemon.stats[1].base_stat)+(4*pokemon.battleStats.level);
     		pokemon.battleStats.spAttack = (pokemon.stats[2].base_stat)+(4*pokemon.battleStats.level);
@@ -65,18 +70,52 @@ angular.module("PokemonModule").service("PokeStore", function($http, $state) {
     	}
     	
     	
-    	/*
-    	// NOT FUNCTIONAL FOR NOW
-    	poSto.getMoves = function(pokemon){
-    		poSto.maxMoveNum = pokemon.moves.length;
-    		console.log("Max Moves: ");
-    		console.log(poSto.maxMoveNum);
-    		
-    		(Math.floor(Math.random() * poSto.maxMoveNum))+1;
-    		
-    	}
-    	*/
     	
+    	// NOT FUNCTIONAL FOR NOW
+    	poSto.getMovesUrls = function(pokemon){
+    		console.log('getting moves');
+    		poSto.maxMoveNum = pokemon.moves.length;
+    		for(zz=0; zz<4; zz++){
+    			poSto.moveRandom = (Math.floor(Math.random() * poSto.maxMoveNum));
+    			poSto.movePromiesUrls.push(pokemon.moves[poSto.moveRandom].move.url);
+    			console.log(pokemon.name + ": " + pokemon.moves[poSto.moveRandom].move.url);
+    		}
+    	}
+    	
+    	poSto.getMovesApi = function(moveString){
+    		return $http({
+    			method:"GET",
+    			url:moveString
+			});
+    	} 
+    	
+//    	
+//    	
+//    	
+//    	poSto.unboxMovesResponses = function(){
+//    		poSto.teamMove
+//    	}
+    	
+    	
+
+    	poSto.unboxMoves = function(teamIndexx){
+    		console.log("team " + teamIndexx);
+    		if(teamIndexx===0){
+    			poSto.movesStarter = 0;
+    		} else {
+    			poSto.movesStarter = 12;
+    		}
+    		
+    		for(poSto.qq=0;poSto.qq<3;poSto.qq++){
+    			for(poSto.ww=0;poSto.ww<4;poSto.ww++){
+    				poSto.playerPokemonArray[teamIndexx][poSto.qq].battleStats.moves.push(poSto.fullMoves[poSto.movesStarter].data);
+    				poSto.movesStarter++;
+    			}
+
+    		}
+    		
+    		// use
+    	}
     	
     	poSto.switchBattler = function(player, inPoke){
     		poSto.outPokemon = poSto.activeBattlers[player];
@@ -91,7 +130,9 @@ angular.module("PokemonModule").service("PokeStore", function($http, $state) {
     	poSto.clearPokeArray= function(){
     		poSto.pokeArray.splice(0);
     		poSto.playerPokemonArray = [[],[]];
+    		poSto.moveArray=[[],[]];
     	};
+    	
     	
     	
  });
@@ -114,16 +155,16 @@ angular.module("PokemonModule").service("BattleLogic", function(PokeStore){
 		battle.critCompare=(Math.random() * 3)+0.25;
 		if((PokeStore.activeBattlers[attacker].battleStats.speed/PokeStore.activeBattlers[defender].battleStats.speed)>battle.critCompare){
 			console.log("ciritcal hit!")
-			battle.retObj.display="Critical Hit!";
+			battle.retObj.display=battle.retObj.display + " Critical Hit!";
 			return 2; 
 		} else{
-			battle.retObj.display="Hit!";
+			battle.retObj.display=battle.retObj.display + " Hit!";
 			return 1; 
 		}
 	}
 	
 	battle.miss=function(){
-		battle.missCompare=(Math.floor(Math.random() * 99))+1;
+		battle.missCompare=(Math.floor(Math.random() * 15))+1;
 		return (battle.missCompare%6);
 	}
 	
@@ -170,13 +211,12 @@ angular.module("PokemonModule").service("BattleLogic", function(PokeStore){
 	}
 	
 	
-	// for now these two attack functions are separated until
-	// populate attack buttons with proper move names
 	
-	battle.spAttack=function(attacker,defender){
+	battle.attack=function(move,attacker,defender){
+		battle.retObj.display = PokeStore.activeBattlers[attacker].name + " used " + PokeStore.activeBattlers[attacker].battleStats.moves[move].name + "!";
 		battle.m=battle.miss(); 
 		if(battle.m===0){
-			battle.retObj.display="MISS!";
+			battle.retObj.display=battle.retObj.display+ " MISSED!";
 			battle.retObj.faint=99;
 			battle.retObj.dmg=0;
 			battle.retObj.hpBarType = PokeStore.activeBattlers[defender].battleStats.hpBarType; 
@@ -184,11 +224,29 @@ angular.module("PokemonModule").service("BattleLogic", function(PokeStore){
 			PokeStore.activeBattlers[defender].battleStats.hpCurr = PokeStore.activeBattlers[defender].battleStats.hpCurr +0;
 			return battle.retObj;
 		} else{
-			battle.spAtk=PokeStore.activeBattlers[attacker].battleStats.spAttack;
-			battle.spDef=PokeStore.activeBattlers[defender].battleStats.spDefense;
+			if(PokeStore.activeBattlers[attacker].battleStats.moves[move].damage_class.name === "physical"){
+				console.log("this is a physical attack");
+				battle.moveAttack= PokeStore.activeBattlers[attacker].battleStats.phAttack;
+				battle.moveDefense = PokeStore.activeBattlers[defender].battleStats.phDefense;
+				battle.movePower = PokeStore.activeBattlers[attacker].battleStats.moves[move].power;
+			}
+			
+			else if(PokeStore.activeBattlers[attacker].battleStats.moves[move].damage_class.name === "special"){
+				console.log("this is a special attack");
+				battle.moveAttack= PokeStore.activeBattlers[attacker].battleStats.spAttack;
+				battle.moveDefense = PokeStore.activeBattlers[defender].battleStats.spDefense;
+				battle.movePower = PokeStore.activeBattlers[attacker].battleStats.moves[move].power;
+			}
+			else {
+				console.log("this is a status attack");
+				battle.moveAttack= PokeStore.activeBattlers[attacker].battleStats.spAttack;
+				battle.moveDefense = PokeStore.activeBattlers[defender].battleStats.spDefense;
+				battle.movePower = 25;
+			}
+			console.log(battle.movePower);
 			battle.atkLvl=PokeStore.activeBattlers[attacker].battleStats.level;
 			battle.crit=battle.critical(attacker,defender); //determine critical mulitplier for this attack
-			battle.damage = battle.crit*(((((2*(battle.atkLvl))+10)/200)*(((battle.spAtk)*(PokeStore.activeBattlers[attacker].stats[2].base_stat))/(1.25*(battle.spDef)))+2));
+			battle.damage = battle.crit*(((((2/5)*(battle.atkLvl)+2)/50)*(battle.movePower)*(battle.moveAttack/battle.moveDefense))+2);
 			PokeStore.activeBattlers[defender].battleStats.hpCurr = (PokeStore.activeBattlers[defender].battleStats.hpCurr-battle.damage);
 			
 			// set final returns
@@ -198,38 +256,6 @@ angular.module("PokemonModule").service("BattleLogic", function(PokeStore){
 			return battle.retObj;
 		}
 	}
-	
-	
-	battle.phAttack=function(attacker,defender){
-		battle.m=battle.miss(); 
-		if(battle.m===0){
-			battle.retObj.display="MISS!";
-			battle.retObj.faint=99;
-			battle.retObj.dmg=0;
-			battle.retObj.hpBarType = PokeStore.activeBattlers[defender].battleStats.hpBarType;
-			console.log("miss!");
-			PokeStore.activeBattlers[defender].battleStats.hpCurr = PokeStore.activeBattlers[defender].battleStats.hpCurr +0;
-			return battle.retObj;
-		} else{
-			battle.phAtk=PokeStore.activeBattlers[attacker].battleStats.phAttack;
-			battle.phDef=PokeStore.activeBattlers[defender].battleStats.phDefense;
-			battle.atkLvl=PokeStore.activeBattlers[attacker].battleStats.level;
-			battle.crit=battle.critical(attacker,defender); //determine critical mulitplier for this attack
-			battle.damage = battle.crit* ((((2*(battle.atkLvl))+10)/200)*(((battle.phAtk)*(PokeStore.activeBattlers[attacker].stats[2].base_stat))/(1.25*(battle.phDef)))+2);
-			PokeStore.activeBattlers[defender].battleStats.hpCurr = (PokeStore.activeBattlers[defender].battleStats.hpCurr-battle.damage);
-			console.log("Damage: " + battle.damage);
-			
-			// set final returns
-			battle.faintCheck(defender);
-			battle.retObj.dmg=Math.round(battle.damage);
-			battle.retObj.hpBarType=battle.hpType(defender);
-			return battle.retObj;
-			
-		}
-	}
-	
-	
-	
 	
 	
 }); 

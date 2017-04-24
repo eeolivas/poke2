@@ -1,12 +1,6 @@
 /**
  *
  */
-//
-//var PokeStore.poSto={};
-//PokeStore.poSto.pokeArray=[]; 
-
-//'$state', function($state),
-// form http with service example
 angular.module("PokemonModule").controller("GenCtrl",  function($state, $timeout, PokeStore, $q){
 	var gen = this;
 
@@ -41,7 +35,7 @@ angular.module("PokemonModule").controller("GenCtrl",  function($state, $timeout
 		}
 		
 		// q.all with an array of promises that will do the ".then function" when all promises are fulfilled
-		$q.all([gen.promise[0],gen.promise[1],gen.promise[2],gen.promise[3],gen.promise[4],gen.promise[5]]).then(function(values){
+		$q.all(gen.promise).then(function(values){
 			PokeStore.pokeArray=values;
 			console.log('fulfilled');
 			PokeStore.refresh = false;
@@ -69,7 +63,8 @@ angular.module("PokemonModule").controller("GenCtrl",  function($state, $timeout
 		}
 		
 		// q.all with an array of promises that will do the ".then function" when all promises are fulfilled
-		$q.all([gen.promise[0],gen.promise[1],gen.promise[2],gen.promise[3],gen.promise[4],gen.promise[5]]).then(function(values){
+//		$q.all([gen.promise[0],gen.promise[1],gen.promise[2],gen.promise[3],gen.promise[4],gen.promise[5]]).then(function(values){
+		$q.all(gen.promise).then(function(values){
 			PokeStore.pokeArray=values;
 			console.log('fulfilled');
 			PokeStore.refresh = false;
@@ -81,13 +76,12 @@ angular.module("PokemonModule").controller("GenCtrl",  function($state, $timeout
 		// time before displaying possible error messages
 		$timeout(gen.setProb1, 6000);
 		$timeout(gen.setProb2, 11000);
-		
 	}
 });
 
-angular.module("PokemonModule").controller("matCtrl", function($state, $timeout, PokeStore) {
+angular.module("PokemonModule").controller("matCtrl", function($state, $timeout, $q, PokeStore) {
 	var mat=this;
-	
+	mat.movePromise=[];
 	if(PokeStore.refresh===true){
 		$state.go('genMatchup');
 	}
@@ -96,9 +90,34 @@ angular.module("PokemonModule").controller("matCtrl", function($state, $timeout,
 	PokeStore.unboxPokemon();
 	PokeStore.setStats(0);
 	PokeStore.setStats(1);
+	mat.moveUrls = PokeStore.movePromiesUrls;
+	console.log(mat.moveUrls);
+	for(pp=0; pp<24; pp++){
+		mat.movePromise.push(PokeStore.getMovesApi(mat.moveUrls[pp]));
+	}
+	
+	$q.all(mat.movePromise).then(function(values){
+//		PokeStore.pokeArray=values;
+//		console.log('fulfilled');
+//		PokeStore.refresh = false;
+//		$state.go('match');
+		console.log("moves gotten!");
+		PokeStore.fullMoves = values;
+		console.log("PokeStore.fullMoves");
+		console.log(PokeStore.fullMoves);
+		PokeStore.unboxMoves(0);
+		PokeStore.unboxMoves(1);
+		mat.setTrubeginShow();
+		
+	}, function(reason){
+		console.log("failure moves");
+		$state.go('genMatchup');
+	});
+	
 	mat.player0Poke = PokeStore.playerPokemonArray[0];
 	mat.player1Poke = PokeStore.playerPokemonArray[1];
 
+	
 	
 	console.log("Player 0 pokes");
 	for(ii=0; ii<mat.player0Poke.length;ii++){
@@ -117,7 +136,6 @@ angular.module("PokemonModule").controller("matCtrl", function($state, $timeout,
 	mat.battlebox = false;
 
 	mat.beginShow= false;
-//	PokeStore.setBattleStats();
 
 	mat.setTruBattleBox = function(){
 		mat.battlebox=true;
@@ -135,7 +153,7 @@ angular.module("PokemonModule").controller("matCtrl", function($state, $timeout,
 	$timeout(mat.setTruBattleBox, 1000);
 	$timeout(mat.setTruPoke0Show, 2500);
 	$timeout(mat.setTruPoke1Show, 3500);
-	$timeout(mat.setTrubeginShow, 4500);
+//	$timeout(mat.setTrubeginShow, 4500);
 
 	
 	mat.enterFighters=function(){
@@ -152,6 +170,12 @@ angular.module("PokemonModule").controller("matCtrl", function($state, $timeout,
 	mat.restart=function(){
 		$state.go('genMatchup');
 	}
+	
+	mat.moves=function(team, poke){
+		PokeStore.getMoves(PokeStore.playerPokemonArray[team][poke])
+	}
+	
+	
 });
 
 
@@ -185,8 +209,7 @@ angular.module("PokemonModule").controller("PlayerOne", function($state, $timeou
 		}
 		if(faint===-2){
 			$state.go('playerOneWin');
-		}
-		
+		}	
 	}
 	
 	pOne.myself = function(){
@@ -201,9 +224,9 @@ angular.module("PokemonModule").controller("PlayerOne", function($state, $timeou
 	// .display = string tells move and cirt/miss etc
 	// .dmg = amount of damage done
 	//.hpBarType = to change the color of the defending pokemon's bar
-	pOne.spAtk = function(){
-		pOne.hideMoves=true;
-		pOne.check=BattleLogic.spAttack(0,1);
+	pOne.atk = function(move, attacker, defender){
+		pOne.hideMoves=true; 
+		pOne.check=BattleLogic.attack(move, attacker, defender);
 		pOne.poke1.battleStats.hpBarType=pOne.check.hpBarType;
 		console.log("return color poke1: " + pOne.poke1.battleStats.hpBarType);
 		console.log("faint value: "+ pOne.check.faint);
@@ -265,7 +288,7 @@ angular.module("PokemonModule").controller("PlayerTwo", function($state, $timeou
 		if(faint===-2){
 			$state.go('playerOneWin');
 		}
-		
+
 	}
 	
 	pTwo.myself = function(){
@@ -280,9 +303,9 @@ angular.module("PokemonModule").controller("PlayerTwo", function($state, $timeou
 	// .faint = the value that determines state change
 	// .display = string tells move and cirt/miss etc
 	// .dmg = amount of damage done
-	pTwo.spAtk = function(){
+	pTwo.atk = function(move, attacker, defender){
 		pTwo.hideMoves=true;
-		pTwo.check=BattleLogic.spAttack(1,0);
+		pTwo.check=BattleLogic.attack(move, attacker, defender);
 		pTwo.poke0.battleStats.hpBarType=pTwo.check.hpBarType;
 		console.log("return color poke0: " + pTwo.poke0.battleStats.hpBarType);
 		console.log("faint value: "+ pTwo.check.faint);

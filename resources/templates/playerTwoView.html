@@ -41,8 +41,10 @@
 <!-- 					<button data-ng-click="p2.opponent()" type="button" class="btn btn-danger">opponent</button> -->
 					
 <!-- 					to be replaced by 4+ real moves/buttons -->
-					<button data-ng-click="p2.spAtk()" type="button" class="btn btn-info">Special Attack</button>
-					<button data-ng-click="p2.phAtk()" type="button" class="btn btn-warning">Physical Attack!</button>
+					<button data-ng-click="p2.atk(0,1,0)" type="button" class="pokename btn btn-info">{{p2.poke1.battleStats.moves[0].name}}</button>
+					<button data-ng-click="p2.atk(1,1,0)" type="button" class="pokename btn btn-success">{{p2.poke1.battleStats.moves[1].name}}</button>
+					<button data-ng-click="p2.atk(2,1,0)" type="button" class="pokename btn btn-danger">{{p2.poke1.battleStats.moves[2].name}}</button>
+					<button data-ng-click="p2.atk(3,1,0)" type="button" class="pokename btn btn-warning">{{p2.poke1.battleStats.moves[3].name}}</button>
 					<button data-ng-click="p2.switchPokemon()" type="button" class="btn btn-primary">Change Pokemon!</button>
 				</div>
 			</div>
